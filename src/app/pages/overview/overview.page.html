@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Todonic</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item-divider>
+      <ion-label>Projects</ion-label>
+      <ion-button (click)="addCategory()" slot="end" fill="clear">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </ion-item-divider>
+    <ion-item *ngFor="let proj of projects">
+      <ion-label>{{ proj.name }}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

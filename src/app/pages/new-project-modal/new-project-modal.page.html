@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()"> Cancel </ion-button>
+    </ion-buttons>
+    <ion-title>New Project</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="save()" [disabled]="project.name === '' ">
+        Done
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-input
+      [(ngModel)]="project.name"
+      placeholder="Name Your Project"
+    ></ion-input>
+  </ion-item>
+
+  <ion-item
+    button
+    (click)="showColors = !showColors"
+    detail="false"
+    class="ion-padding-bottom"
+  >
+    <ion-icon slot="start" name="color-palette-outline"></ion-icon
+    ><ion-label>Color</ion-label>
+    <!-- color-preview added to global.css -->
+    <div
+      class="color-preview"
+      slot="end"
+      [style.background]="project.color"
+    ></div>
+  </ion-item>
+  <!--  -->
+  <!--  -->
+  <ion-item>
+    <color-circle
+      width="95%"
+      *ngIf="showColors"
+      [color]="project.color"
+      (onChange)="colorSelected($event)"
+    ></color-circle>
+  </ion-item>
+</ion-content>
