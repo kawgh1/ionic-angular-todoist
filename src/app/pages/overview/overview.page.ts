@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IonRouterOutlet, ModalController } from '@ionic/angular';
-import { DataService } from 'src/app/services/data.service';
+import { DataService, Task } from 'src/app/services/data.service';
 import { NewProjectModalPage } from '../new-project-modal/new-project-modal.page';
 
 @Component({
@@ -10,6 +10,15 @@ import { NewProjectModalPage } from '../new-project-modal/new-project-modal.page
 })
 export class OverviewPage implements OnInit {
   projects = [];
+  showTaskInput = false;
+
+  task: Task = {
+    name: '',
+    project: 0,
+    due: '',
+    priority: 4,
+  };
+
   constructor(
     private modalCtrl: ModalController,
     private routerOutlet: IonRouterOutlet,
@@ -39,5 +48,21 @@ export class OverviewPage implements OnInit {
     if (result && result.data && result.data.reload) {
       this.loadData();
     }
+  }
+
+  saveTask() {
+    this.dataService.addTask(this.task).then(() => {
+      // hide overlay on save task
+      this.showTaskInput = false;
+      // pull new data to include task
+      this.loadData();
+      // reset default task values
+      this.task = {
+        name: '',
+        project: 0,
+        due: '',
+        priority: 4,
+      };
+    });
   }
 }

@@ -48,6 +48,22 @@ export class DataService {
     return this.getProjectsAsArray();
   }
 
+  // TASKS
+
+  async addTask(task: Task) {
+    const taskArray = await this.getTasksArray();
+    task.id = Date.now();
+    taskArray.push(task);
+    return Storage.set({ key: TASK_KEY, value: JSON.stringify(taskArray) });
+  }
+
+  async getTasks() {
+    const tasksArray = await this.getTasksArray();
+    return tasksArray;
+  }
+
+  // PRIVATE
+
   private async getProjectsAsArray(addInbox = true) {
     const projects = await Storage.get({ key: PROJECT_KEY });
 
@@ -68,5 +84,15 @@ export class DataService {
     }
 
     return projArray;
+  }
+
+  private async getTasksArray() {
+    const tasks = await Storage.get({ key: TASK_KEY });
+    let tasksArray = [];
+
+    if (tasks.value) {
+      tasksArray = JSON.parse(tasks.value);
+    }
+    return tasksArray;
   }
 }

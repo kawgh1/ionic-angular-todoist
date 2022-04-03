@@ -5,6 +5,12 @@
 </ion-header>
 
 <ion-content>
+  <!-- backdrop -->
+  <ion-backdrop
+    *ngIf="showTaskInput"
+    [visible]="showTaskInput"
+    (ionBackdropTap)="showTaskInput = false"
+  ></ion-backdrop>
   <ion-list>
     <ion-item-divider>
       <ion-label>Projects</ion-label>
@@ -16,4 +22,33 @@
       <ion-label>{{ proj.name }}</ion-label>
     </ion-item>
   </ion-list>
+
+  <!-- fab button -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="showTaskInput = true;">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
+
+<ion-footer *ngIf="showTaskInput">
+  <ion-row>
+    <ion-col size="12">
+      <ion-input
+        type="text"
+        autofocus="true"
+        [(ngModel)]="task.name"
+        placeholder="Add a task"
+        class="ion-padding-left"
+      ></ion-input>
+    </ion-col>
+    <ion-col size="10"> </ion-col>
+    <ion-col size="2" class="ion-no-padding ion-text-right"
+      ><ion-button (click)="saveTask()" fill="clear" shape="round">
+        <ion-icon
+          slot="icon-only"
+          name="arrow-up-circle-outline"
+        ></ion-icon> </ion-button
+    ></ion-col>
+  </ion-row>
+</ion-footer>
