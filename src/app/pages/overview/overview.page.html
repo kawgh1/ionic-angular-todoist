@@ -36,13 +36,42 @@
     <ion-col size="12">
       <ion-input
         type="text"
+        #taskInput
         autofocus="true"
         [(ngModel)]="task.name"
         placeholder="Add a task"
         class="ion-padding-left"
       ></ion-input>
     </ion-col>
-    <ion-col size="10"> </ion-col>
+    <!-- always pass the $event when using a popover -->
+    <ion-col size="10"
+      ><ion-button
+        (click)="openProjectPopover($event)"
+        fill="outline"
+        size="small"
+      >
+        <div
+          class="color-preview-small"
+          slot="start"
+          [style.background]="task.project.color"
+          *ngIf="task.project"
+          style="margin-right: 5px"
+        ></div>
+        {{ task.project ? task.project.name : 'Inbox'}}
+      </ion-button>
+
+      <ion-button
+        (click)="openPriorityPopover($event)"
+        fill="outline"
+        size="small"
+      >
+        <ion-icon
+          slot="icon-only"
+          name="flag"
+          [style.color]="getTaskColor()"
+        ></ion-icon>
+      </ion-button>
+    </ion-col>
     <ion-col size="2" class="ion-no-padding ion-text-right"
       ><ion-button (click)="saveTask()" fill="clear" shape="round">
         <ion-icon

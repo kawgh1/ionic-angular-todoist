@@ -1,0 +1,17 @@
+<!-- on a popover you dont usually need any header or toolbar area, just the content -->
+
+<ion-list>
+  <ion-item
+    button
+    *ngFor="let project of projects"
+    detail="false"
+    (click)="selectProject(project)"
+  >
+    <div
+      class="color-preview"
+      slot="start"
+      [style.background]="project.color"
+    ></div>
+    {{ project.name }}
+  </ion-item>
+</ion-list>

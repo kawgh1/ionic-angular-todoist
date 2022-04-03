@@ -62,6 +62,29 @@ export class DataService {
     return tasksArray;
   }
 
+  // Priority colors for tasks
+
+  getPriorities() {
+    return [
+      {
+        value: 1,
+        color: '#ff0000',
+      },
+      {
+        value: 2,
+        color: '#ff9d46',
+      },
+      {
+        value: 3,
+        color: '#0000ff',
+      },
+      {
+        value: 4,
+        color: '#737373',
+      },
+    ];
+  }
+
   // PRIVATE
 
   private async getProjectsAsArray(addInbox = true) {

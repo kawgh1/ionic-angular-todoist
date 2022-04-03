@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { IonRouterOutlet, ModalController } from '@ionic/angular';
+import {
+  IonRouterOutlet,
+  ModalController,
+  PopoverController,
+} from '@ionic/angular';
 import { DataService, Task } from 'src/app/services/data.service';
 import { NewProjectModalPage } from '../new-project-modal/new-project-modal.page';
+import { PriorityPopoverPage } from '../priority-popover/priority-popover.page';
+import { ProjectPopoverPage } from '../project-popover/project-popover.page';
 
 @Component({
   selector: 'app-overview',
@@ -22,7 +28,8 @@ export class OverviewPage implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private routerOutlet: IonRouterOutlet,
-    private dataService: DataService
+    private dataService: DataService,
+    private popoverCtrl: PopoverController
   ) {}
 
   ngOnInit() {
@@ -51,6 +58,9 @@ export class OverviewPage implements OnInit {
   }
 
   saveTask() {
+    const fakeProject = this.task.project as any;
+    this.task.project = fakeProject ? fakeProject.id : null;
+
     this.dataService.addTask(this.task).then(() => {
       // hide overlay on save task
       this.showTaskInput = false;
@@ -63,6 +73,39 @@ export class OverviewPage implements OnInit {
         due: '',
         priority: 4,
       };
+    });
+  }
+
+  getTaskColor() {
+    return '#ff00ff';
+  }
+
+  async openProjectPopover(event) {
+    const popover = await this.popoverCtrl.create({
+      component: ProjectPopoverPage,
+      event,
+    });
+
+    await popover.present();
+    popover.onDidDismiss().then((result) => {
+      console.log('my popover result: ', result);
+      if (result.data && result.data.project) {
+        this.task.project = result.data.project;
+      }
+    });
+  }
+
+  async openPriorityPopover(event) {
+    const popover = await this.popoverCtrl.create({
+      component: PriorityPopoverPage,
+      event,
+    });
+
+    await popover.present();
+    popover.onDidDismiss().then((result) => {
+      if (result.data && result.data.priority) {
+        this.task.priority = result.data.priority;
+      }
     });
   }
 }
