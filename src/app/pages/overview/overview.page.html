@@ -1,29 +1,45 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Todonic</ion-title>
+    <ion-title>Todonoic</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <!-- backdrop -->
   <ion-backdrop
     *ngIf="showTaskInput"
     [visible]="showTaskInput"
     (ionBackdropTap)="showTaskInput = false"
   ></ion-backdrop>
-  <ion-list>
+
+  <ion-searchbar
+    enterkeyhint="Search"
+    (ionChange)="searchTask($event)"
+    (ionBlur)="searching = false;"
+  ></ion-searchbar>
+
+  <ion-list *ngIf="!searching">
     <ion-item-divider>
       <ion-label>Projects</ion-label>
       <ion-button (click)="addCategory()" slot="end" fill="clear">
-        <ion-icon slot="icon-only" name="add"></ion-icon>
+        <ion-icon name="add" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-item-divider>
-    <ion-item *ngFor="let proj of projects">
-      <ion-label>{{ proj.name }}</ion-label>
+    <ion-item
+      button
+      *ngFor="let proj of projects"
+      [routerLink]="['/project', proj.id]"
+      detail="false"
+    >
+      <div
+        class="color-preview-small ion-padding-right"
+        slot="start"
+        [style.background]="proj.color"
+      ></div>
+      <ion-label> {{ proj.name }} </ion-label>
+      <div slot="end">{{ proj.tasks.length }}</div>
     </ion-item>
   </ion-list>
 
-  <!-- fab button -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="showTaskInput = true;">
       <ion-icon name="add"></ion-icon>
@@ -32,52 +48,58 @@
 </ion-content>
 
 <ion-footer *ngIf="showTaskInput">
-  <ion-row>
-    <ion-col size="12">
-      <ion-input
-        type="text"
-        #taskInput
-        autofocus="true"
-        [(ngModel)]="task.name"
-        placeholder="Add a task"
-        class="ion-padding-left"
-      ></ion-input>
-    </ion-col>
-    <!-- always pass the $event when using a popover -->
-    <ion-col size="10"
-      ><ion-button
-        (click)="openProjectPopover($event)"
-        fill="outline"
-        size="small"
-      >
-        <div
-          class="color-preview-small"
-          slot="start"
-          [style.background]="task.project.color"
-          *ngIf="task.project"
-          style="margin-right: 5px"
-        ></div>
-        {{ task.project ? task.project.name : 'Inbox'}}
-      </ion-button>
+  <ion-datetime
+    displayFormat="MM DD YY"
+    [(ngModel)]="task.due"
+    hidden="true"
+    #due
+  ></ion-datetime>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-input
+          #taskInput
+          autofocus="true"
+          [(ngModel)]="task.name"
+          placeholder="Add a task"
+          class="ion-padding-left"
+        ></ion-input>
+      </ion-col>
+      <ion-col size="10">
+        <ion-button
+          fill="outline"
+          (click)="openProjectPopover($event)"
+          size="small"
+        >
+          <div
+            class="color-preview-small"
+            slot="start"
+            [style.background]="task.project.color"
+            *ngIf="task.project"
+          ></div>
+          {{ task.project ? task.project.name : 'Inbox' }}
+        </ion-button>
 
-      <ion-button
-        (click)="openPriorityPopover($event)"
-        fill="outline"
-        size="small"
-      >
-        <ion-icon
-          slot="icon-only"
-          name="flag"
-          [style.color]="getTaskColor()"
-        ></ion-icon>
-      </ion-button>
-    </ion-col>
-    <ion-col size="2" class="ion-no-padding ion-text-right"
-      ><ion-button (click)="saveTask()" fill="clear" shape="round">
-        <ion-icon
-          slot="icon-only"
-          name="arrow-up-circle-outline"
-        ></ion-icon> </ion-button
-    ></ion-col>
-  </ion-row>
+        <ion-button fill="outline" (click)="selectDue()" size="small">
+          {{ task.due | date }}
+        </ion-button>
+
+        <ion-button
+          fill="outline"
+          (click)="openPriorityPopover($event)"
+          size="small"
+        >
+          <ion-icon
+            name="flag"
+            slot="icon-only"
+            [style.color]="getTaskColor()"
+          ></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col class="ion-no-padding ion-text-right" size="2">
+        <ion-button (click)="saveTask()" shape="round" fill="clear">
+          <ion-icon name="arrow-up-circle-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col> </ion-row
+  ></ion-grid>
 </ion-footer>

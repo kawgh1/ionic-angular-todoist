@@ -14,14 +14,6 @@ const routes: Routes = [
     redirectTo: 'overview',
     pathMatch: 'full',
   },
-  {
-    path: 'project-popover',
-    loadChildren: () => import('./pages/project-popover/project-popover.module').then( m => m.ProjectPopoverPageModule)
-  },
-  {
-    path: 'priority-popover',
-    loadChildren: () => import('./pages/priority-popover/priority-popover.module').then( m => m.PriorityPopoverPageModule)
-  },
 ];
 
 @NgModule({

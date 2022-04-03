@@ -1,9 +1,17 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>priorityPopover</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- on a popover you dont usually need any header or toolbar area, just the content -->
 
-<ion-content>
-
-</ion-content>
+<ion-list>
+  <ion-item
+    button
+    *ngFor="let priority of priorities"
+    detail="false"
+    (click)="selectPriority(priority)"
+  >
+    <ion-icon
+      slot="start"
+      name="flag"
+      [style.color]="priority.color"
+    ></ion-icon>
+    Priority {{ priority.value}}
+  </ion-item>
+</ion-list>

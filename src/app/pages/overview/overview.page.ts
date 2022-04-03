@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+/* eslint-disable @typescript-eslint/member-ordering */
+import { Task } from './../../services/data.service';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import {
-  IonRouterOutlet,
   ModalController,
+  IonRouterOutlet,
   PopoverController,
+  IonInput,
 } from '@ionic/angular';
-import { DataService, Task } from 'src/app/services/data.service';
 import { NewProjectModalPage } from '../new-project-modal/new-project-modal.page';
+import { DataService } from '../../services/data.service';
 import { PriorityPopoverPage } from '../priority-popover/priority-popover.page';
 import { ProjectPopoverPage } from '../project-popover/project-popover.page';
 
@@ -17,13 +20,18 @@ import { ProjectPopoverPage } from '../project-popover/project-popover.page';
 export class OverviewPage implements OnInit {
   projects = [];
   showTaskInput = false;
+  searching = false;
+  searchResults = [];
 
   task: Task = {
     name: '',
     project: 0,
-    due: '',
+    due: new Date().toISOString(),
     priority: 4,
   };
+
+  @ViewChild('due', { static: false, read: ElementRef }) due: ElementRef;
+  @ViewChild('taskInput', { static: false }) taskInput: IonInput;
 
   constructor(
     private modalCtrl: ModalController,
@@ -37,8 +45,8 @@ export class OverviewPage implements OnInit {
   }
 
   async loadData() {
-    this.projects = await this.dataService.getProjects();
-    console.log('my projects', this.projects);
+    this.projects = await this.dataService.getTaskOverview();
+    console.log('my projects: ', this.projects);
   }
 
   async addCategory() {
@@ -49,7 +57,6 @@ export class OverviewPage implements OnInit {
     });
 
     await modal.present();
-    // we want to listen to the results of our modal
     const result = await modal.onDidDismiss();
 
     if (result && result.data && result.data.reload) {
@@ -59,36 +66,31 @@ export class OverviewPage implements OnInit {
 
   saveTask() {
     const fakeProject = this.task.project as any;
-    this.task.project = fakeProject ? fakeProject.id : null;
+    this.task.project = this.task.project ? fakeProject.id : null;
 
     this.dataService.addTask(this.task).then(() => {
-      // hide overlay on save task
       this.showTaskInput = false;
-      // pull new data to include task
       this.loadData();
-      // reset default task values
       this.task = {
         name: '',
         project: 0,
-        due: '',
+        due: new Date().toISOString(),
         priority: 4,
       };
     });
-  }
-
-  getTaskColor() {
-    return '#ff00ff';
   }
 
   async openProjectPopover(event) {
     const popover = await this.popoverCtrl.create({
       component: ProjectPopoverPage,
       event,
+      keyboardClose: false,
     });
 
     await popover.present();
     popover.onDidDismiss().then((result) => {
-      console.log('my popover result: ', result);
+      this.taskInput.setFocus();
+
       if (result.data && result.data.project) {
         this.task.project = result.data.project;
       }
@@ -99,13 +101,33 @@ export class OverviewPage implements OnInit {
     const popover = await this.popoverCtrl.create({
       component: PriorityPopoverPage,
       event,
+      keyboardClose: false,
     });
 
     await popover.present();
     popover.onDidDismiss().then((result) => {
+      this.taskInput.setFocus();
+
       if (result.data && result.data.priority) {
         this.task.priority = result.data.priority;
       }
+    });
+  }
+
+  getTaskColor() {
+    const priorities = this.dataService.getPriorities();
+    return priorities.filter((p) => p.value === this.task.priority)[0].color;
+  }
+
+  selectDue() {
+    this.due.nativeElement.click();
+  }
+
+  searchTask(event) {
+    this.searching = true;
+    const term = event.detail.value;
+    this.dataService.searchTask(term.toLowerCase()).then((results) => {
+      this.searchResults = results;
     });
   }
 }

@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-// import { Plugins } from '@capacitor/core';
-import { Storage } from '@capacitor/storage';
+import { Plugins } from '@capacitor/core';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-// const { Storage } = Plugins;
+const { Storage } = Plugins;
 
 const PROJECT_KEY = 'categories';
 const TASK_KEY = 'tasks';
@@ -11,8 +9,8 @@ const TASK_KEY = 'tasks';
 export interface Project {
   name: string;
   color: string;
+  tasks?: Task[];
   id?: number;
-  task?: Task[];
 }
 
 export interface Task {
@@ -27,20 +25,13 @@ export interface Task {
 @Injectable({
   providedIn: 'root',
 })
-
-// using promises and not observables
 export class DataService {
   constructor() {}
 
   async addProject(proj: Project) {
-    // pass false to prevent adding inbox
     const projArray = await this.getProjectsAsArray(false);
-    // set project id
     proj.id = Date.now();
-    // add project to project array
     projArray.push(proj);
-
-    // project object to JSON string
     return Storage.set({ key: PROJECT_KEY, value: JSON.stringify(projArray) });
   }
 
@@ -48,21 +39,50 @@ export class DataService {
     return this.getProjectsAsArray();
   }
 
-  // TASKS
+  async getTaskOverview() {
+    const tasksArray = await this.getTasksAsArray();
+    const projArray = await this.getProjectsAsArray();
+
+    const sorted = [];
+
+    for (const p of projArray) {
+      sorted.push({
+        ...p,
+        tasks: tasksArray.filter((task) => task.project === p.id && !task.done),
+      });
+    }
+    return sorted;
+  }
+
+  async getProjectById(id) {
+    let projArray = await this.getProjectsAsArray();
+    const tasksArray = await this.getTasksAsArray();
+
+    let item = null;
+    projArray = projArray.filter((proj) => proj.id === id);
+
+    if (projArray.length > 0) {
+      item = projArray[0];
+      item.tasks = tasksArray.filter(
+        (task) => task.project === id && !task.done
+      );
+    }
+
+    return item;
+  }
 
   async addTask(task: Task) {
-    const taskArray = await this.getTasksArray();
+    const taskArray = await this.getTasksAsArray();
     task.id = Date.now();
     taskArray.push(task);
+    console.log('SAVE: ', taskArray);
+
     return Storage.set({ key: TASK_KEY, value: JSON.stringify(taskArray) });
   }
 
   async getTasks() {
-    const tasksArray = await this.getTasksArray();
-    return tasksArray;
+    return this.getTasksAsArray();
   }
-
-  // Priority colors for tasks
 
   getPriorities() {
     return [
@@ -85,12 +105,39 @@ export class DataService {
     ];
   }
 
-  // PRIVATE
+  async updateTask(task: Task) {
+    const tasksArray: Task[] = await this.getTasksAsArray();
+    const result = [];
+
+    for (const t of tasksArray) {
+      if (t.id === task.id) {
+        result.push(task);
+      } else {
+        result.push(t);
+      }
+    }
+
+    return Storage.set({ key: TASK_KEY, value: JSON.stringify(result) });
+  }
+
+  async removeTask(id) {
+    let tasksArray: Task[] = await this.getTasksAsArray();
+    tasksArray = tasksArray.filter((t) => t.id !== id);
+    return Storage.set({ key: TASK_KEY, value: JSON.stringify(tasksArray) });
+  }
+
+  async searchTask(name) {
+    const tasksArray: Task[] = await this.getTasksAsArray();
+    return tasksArray.filter(
+      (task) => task.name.toLowerCase().indexOf(name) >= 0
+    );
+  }
+
+  // PRIVATE METHODS
 
   private async getProjectsAsArray(addInbox = true) {
     const projects = await Storage.get({ key: PROJECT_KEY });
-
-    console.log('projects', projects);
+    console.log('projects: ', projects);
     let projArray = [];
 
     if (projects.value) {
@@ -109,7 +156,7 @@ export class DataService {
     return projArray;
   }
 
-  private async getTasksArray() {
+  private async getTasksAsArray() {
     const tasks = await Storage.get({ key: TASK_KEY });
     let tasksArray = [];
 

@@ -8,8 +8,8 @@ import { OverviewPageRoutingModule } from './overview-routing.module';
 
 import { OverviewPage } from './overview.page';
 import { NewProjectModalPageModule } from '../new-project-modal/new-project-modal.module';
-import { PriorityPopoverPageModule } from '../priority-popover/priority-popover.module';
 import { ProjectPopoverPageModule } from '../project-popover/project-popover.module';
+import { PriorityPopoverPageModule } from '../priority-popover/priority-popover.module';
 
 @NgModule({
   imports: [
@@ -18,8 +18,8 @@ import { ProjectPopoverPageModule } from '../project-popover/project-popover.mod
     IonicModule,
     OverviewPageRoutingModule,
     NewProjectModalPageModule,
-    PriorityPopoverPageModule,
     ProjectPopoverPageModule,
+    PriorityPopoverPageModule,
   ],
   declarations: [OverviewPage],
 })
