@@ -5,3 +5,13 @@
 
 - ## live
 - https://ionic-angular-todoist.netlify.app/
+
+- ## mobile emulator
+- ### For Capacitor deployment
+- ionic build
+- npx cap add iOS
+- npx cap sync
+- ionic capacitor run ios --livereload --external
+
+- ## using ngModel
+- https://www.guru99.com/ng-model-angularjs.html
