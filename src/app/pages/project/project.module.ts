@@ -9,12 +9,7 @@ import { ProjectPageRoutingModule } from './project-routing.module';
 import { ProjectPage } from './project.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    ProjectPageRoutingModule
-  ],
-  declarations: [ProjectPage]
+  imports: [CommonModule, FormsModule, IonicModule, ProjectPageRoutingModule],
+  declarations: [ProjectPage],
 })
 export class ProjectPageModule {}
