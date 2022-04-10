@@ -17,14 +17,14 @@
     <ion-input
       [(ngModel)]="project.name"
       placeholder="Name Your Project"
-      autofocus="true"
+      [autofocus]="true"
     ></ion-input>
   </ion-item>
 
   <ion-item
     button
     (click)="showColors = !showColors"
-    detail="false"
+    [detail]="false"
     class="ion-padding-bottom"
   >
     <ion-icon slot="start" name="color-palette-outline"></ion-icon

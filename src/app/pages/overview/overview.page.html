@@ -28,7 +28,7 @@
       button
       *ngFor="let proj of projects"
       [routerLink]="['/project', proj.id]"
-      detail="false"
+      [detail]="false"
     >
       <div
         class="color-preview-small ion-padding-right"
@@ -51,7 +51,7 @@
   <ion-datetime
     displayFormat="MM DD YY"
     [(ngModel)]="task.due"
-    hidden="true"
+    [hidden]="true"
     #due
   ></ion-datetime>
   <ion-grid>
@@ -59,7 +59,7 @@
       <ion-col size="12">
         <ion-input
           #taskInput
-          autofocus="true"
+          [autofocus]="true"
           [(ngModel)]="task.name"
           placeholder="Add a task"
           class="ion-padding-left"

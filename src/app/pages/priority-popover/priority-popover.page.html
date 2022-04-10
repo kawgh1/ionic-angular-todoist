@@ -4,7 +4,7 @@
   <ion-item
     button
     *ngFor="let priority of priorities"
-    detail="false"
+    [detail]="false"
     (click)="selectPriority(priority)"
   >
     <ion-icon

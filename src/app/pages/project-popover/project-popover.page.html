@@ -4,7 +4,7 @@
   <ion-item
     button
     *ngFor="let project of projects"
-    detail="false"
+    [detail]="false"
     (click)="selectProject(project)"
   >
     <div
