@@ -14,6 +14,11 @@ const routes: Routes = [
     redirectTo: 'overview',
     pathMatch: 'full',
   },
+  {
+    path: 'project/:id',
+    loadChildren: () =>
+      import('./pages/project/project.module').then((m) => m.ProjectPageModule),
+  },
 ];
 
 @NgModule({

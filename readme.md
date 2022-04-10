@@ -32,3 +32,7 @@ Android build error
 
 `targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 29`
 https://stackoverflow.com/questions/67922091/unable-to-resolve-class-targetsdkversion
+
+## generate project page for single project
+
+`ionic g page pages/project`

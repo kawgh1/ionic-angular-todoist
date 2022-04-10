@@ -40,15 +40,21 @@ export class DataService {
   }
 
   async getTaskOverview() {
-    const tasksArray = await this.getTasksAsArray();
-    const projArray = await this.getProjectsAsArray();
+    let tasksArray = await this.getTasksAsArray();
+    let projArray = await this.getProjectsAsArray();
 
-    const sorted = [];
+    let sorted = [];
 
-    for (const p of projArray) {
+    for (let project of projArray) {
       sorted.push({
-        ...p,
-        tasks: tasksArray.filter((task) => task.project === p.id && !task.done),
+        ...project,
+        tasks: tasksArray.filter(
+          // only return tasks that are not done
+          //   (task) => task.project === project.id && !task.done
+          // ),
+          // return all matching tasks, done and not done
+          (task) => task.project === project.id
+        ),
       });
     }
     return sorted;
@@ -56,19 +62,23 @@ export class DataService {
 
   async getProjectById(id) {
     let projArray = await this.getProjectsAsArray();
-    const tasksArray = await this.getTasksAsArray();
+    let tasksArray = await this.getTasksAsArray();
 
-    let item = null;
-    projArray = projArray.filter((proj) => proj.id === id);
-
+    let project = null;
+    // using == instead of === because id is passed as a string and not a number
+    // from URL param
+    projArray = projArray.filter((proj) => proj.id == id);
     if (projArray.length > 0) {
-      item = projArray[0];
-      item.tasks = tasksArray.filter(
-        (task) => task.project === id && !task.done
+      project = projArray[0];
+      project.tasks = tasksArray.filter(
+        // only return tasks that are not done
+        // (task) => task.project === id && !task.done
+        // return all matching tasks
+        // using == instead of === because id is passed as a string
+        (task) => task.project == id
       );
     }
-
-    return item;
+    return project;
   }
 
   async addTask(task: Task) {
@@ -152,7 +162,6 @@ export class DataService {
         tasks: [],
       });
     }
-
     return projArray;
   }
 

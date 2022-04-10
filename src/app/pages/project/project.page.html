@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/overview"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="project">{{ project?.name}}</ion-title>
+    <!-- <ion-buttons slot="end">
+       <ion-button (click)="reorderDisabled = !reorderDisabled">
+         <ion-icon slot="start" name="repeat" [color]="reorderDisabled ? 'light' : 'secondary'></ion-icon>
+         Click me
+       </ion-button>
+     </ion-buttons> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngIf="project">
+    <ion-item *ngFor="let task of project.tasks">
+      <ion-label
+        >{{ task.name}}
+        <p>{{ task.due | date }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
