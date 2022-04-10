@@ -2,7 +2,7 @@
 
 <ion-list>
   <ion-item
-    button
+    [button]="true"
     *ngFor="let project of projects"
     [detail]="false"
     (click)="selectProject(project)"

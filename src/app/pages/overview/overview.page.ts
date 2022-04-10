@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/member-ordering */
-import { Task } from './../../services/data.service';
+import { Project, Task } from './../../services/data.service';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import {
   ModalController,
@@ -116,7 +115,18 @@ export class OverviewPage implements OnInit {
 
   getTaskColor() {
     const priorities = this.dataService.getPriorities();
-    return priorities.filter((p) => p.value === this.task.priority)[0].color;
+    return priorities.filter((p) => p.value == this.task.priority)[0].color;
+  }
+
+  // added these to avoid production build errors
+  async getProjectColor(projectId: number) {
+    const project = await this.dataService.getProjectById(projectId);
+    return project.color;
+  }
+  // added these to avoid production build errors
+  async getProjectName(projectId: number) {
+    const project = await this.dataService.getProjectById(projectId);
+    return project.name;
   }
 
   selectDue() {

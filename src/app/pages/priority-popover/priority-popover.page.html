@@ -2,7 +2,7 @@
 
 <ion-list>
   <ion-item
-    button
+    [button]="true"
     *ngFor="let priority of priorities"
     [detail]="false"
     (click)="selectPriority(priority)"

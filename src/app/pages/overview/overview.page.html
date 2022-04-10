@@ -12,7 +12,7 @@
   ></ion-backdrop>
 
   <ion-searchbar
-    enterkeyhint="Search"
+    enterkeyhint="search"
     (ionChange)="searchTask($event)"
     (ionBlur)="searching = false;"
   ></ion-searchbar>
@@ -25,7 +25,7 @@
       </ion-button>
     </ion-item-divider>
     <ion-item
-      button
+      [button]="true"
       *ngFor="let proj of projects"
       [routerLink]="['/project', proj.id]"
       [detail]="false"
@@ -71,13 +71,15 @@
           (click)="openProjectPopover($event)"
           size="small"
         >
+          <!-- added getProjectColor method to avoid production build errors -->
           <div
             class="color-preview-small"
             slot="start"
-            [style.background]="task.project.color"
+            [style.background]="getProjectColor(task.project)"
             *ngIf="task.project"
           ></div>
-          {{ task.project ? task.project.name : 'Inbox' }}
+          <!-- added getProjectName method to avoid production build errors -->
+          {{ task.project ? getProjectName(task.project) : 'Inbox' }}
         </ion-button>
 
         <ion-button fill="outline" (click)="selectDue()" size="small">
